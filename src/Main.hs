@@ -51,18 +51,15 @@ main = do
   sphereProgram <- makeProgram [ (VertexShader, "shaders/sphere.vert")
                                , (FragmentShader, "shaders/sphere.frac") ]
 
-  file <- BS.readFile "shaders/sphere.frac"
-  BS.putStrLn file
-
   planeProgram <- makeProgram [ (VertexShader, "shaders/plane.vert")
                               , (FragmentShader, "shaders/plane.frac") ]
 
   let displayData = DisplayData { camera = camIO, sphereProgram = sphereProgram, planeProgram = planeProgram }
-  
+
   window <- createWindow "Hello, World"
   reshapeCallback $= Just reshape
   displayCallback $= display displayData
-  lookAt (camPos camera) (camLook camera) (camUp camera)
+  --lookAt (camPos camera) (camLook camera) (camUp camera)
   mainLoop
 
 reshape :: ReshapeCallback
@@ -74,8 +71,8 @@ reshape size = do
 
 display :: DisplayData -> DisplayCallback
 display displayData = do
-  clearColor $= Color4 1 1 1 1
-  clear [ ColorBuffer, DepthBuffer ]
+  --clearColor $= Color4 1 1 1 1
+  clear [ ColorBuffer ]
   let camIO = camera displayData
   let sphereProg = sphereProgram displayData
   let planeProg = planeProgram displayData
@@ -89,9 +86,8 @@ display displayData = do
   -- gridAxis
   riemannSphere displayData
 
-  flush
+  -- flush
   putStrLn "Drawn!"
-
 
 gridAxis :: IO ()
 gridAxis = do
@@ -127,9 +123,12 @@ riemannSphere displayData = do
   sphere <- genObjectName
   bindVertexArrayObject $= Just sphere
 
-  let vertices = genSphere 0.25 5 5
+  --let vertices = genSphere 0.25 5 5
+  let vertices = [(Vertex3 (-1) 0 0), (Vertex3 0 1 0), (Vertex3 1 0 (0 :: GLfloat))]
       numVertices = (fromIntegral $ length vertices) :: Int32
       vertexSize = (fromIntegral $ sizeOf (head vertices)) :: Int32
+
+  putStrLn $ show numVertices ++ ", " ++ show vertexSize
 
   arrayBuffer <- genObjectName
   bindBuffer ArrayBuffer $= Just arrayBuffer
@@ -137,15 +136,21 @@ riemannSphere displayData = do
     let size = fromIntegral (numVertices * vertexSize)
     bufferData ArrayBuffer $= (size, ptr, StaticDraw)
 
-  currentProgram $= (Just $ sphereProgram displayData)
-
-  let firstIndex = (fromIntegral 0) :: Int32
+  let firstIndex = 0 :: Int32
       vPosition = AttribLocation 0
 
   vertexAttribPointer vPosition $= (ToFloat,
     VertexArrayDescriptor 3 Float (fromIntegral vertexSize) (bufferOffset (firstIndex * vertexSize)))
+  vertexAttribArray vPosition $= Enabled
+
+  --bindVertexArrayObject $= Just sphere
+  currentProgram $= (Just $ sphereProgram displayData)
 
   drawArrays Triangles firstIndex numVertices
+
+  flush
+
+  putStrLn "Should have been drawn now"
 
 
 genSphere :: Float -> Float -> Float -> [Vertex3 GLfloat]

@@ -20,7 +20,6 @@ data Camera = Camera { camPos  :: Vertex3 GLdouble
 
 data DisplayData = DisplayData { camera        :: IORef Camera
                                , sphereProgram :: Program
-                               , planeProgram  :: Program
                                }
 
 main :: IO ()
@@ -46,15 +45,19 @@ main = do
 
  -- Programs 
 
-  putStrLn $ show $ genSphere 0.5 5 5
+--  putStrLn $ show $ genSphere 0.5 5 5
 
   sphereProgram <- makeProgram [ (VertexShader, "shaders/sphere.vert")
-                               , (FragmentShader, "shaders/sphere.frac") ]
+                               , (FragmentShader, "shaders/sphere.frag") ]
 
-  planeProgram <- makeProgram [ (VertexShader, "shaders/plane.vert")
-                              , (FragmentShader, "shaders/plane.frac") ]
+  -- planeProgram <- makeProgram [ (VertexShader, "shaders/plane.vert")
+  --                             , (FragmentShader, "shaders/plane.frac") ]
 
-  let displayData = DisplayData { camera = camIO, sphereProgram = sphereProgram, planeProgram = planeProgram }
+  -- sphereProgram <- loadShaders [
+  --    ShaderInfo VertexShader (FileSource "shaders/sphere.vert"),
+  --    ShaderInfo FragmentShader (FileSource "shaders/sphere.frac")]
+
+  let displayData = DisplayData { camera = camIO, sphereProgram = sphereProgram }
 
   window <- createWindow "Hello, World"
   reshapeCallback $= Just reshape
@@ -75,7 +78,7 @@ display displayData = do
   clear [ ColorBuffer ]
   let camIO = camera displayData
   let sphereProg = sphereProgram displayData
-  let planeProg = planeProgram displayData
+  --let planeProg = planeProgram displayData
 
   camera <- get camIO
 
@@ -123,8 +126,8 @@ riemannSphere displayData = do
   sphere <- genObjectName
   bindVertexArrayObject $= Just sphere
 
-  --let vertices = genSphere 0.25 5 5
-  let vertices = [(Vertex3 (-1) 0 0), (Vertex3 0 1 0), (Vertex3 1 0 (0 :: GLfloat))]
+  let vertices = genSphere 0.25 50 50
+  --let vertices = [(Vertex3 (-1) 0 0), (Vertex3 0 1 0), (Vertex3 1 0 (0 :: GLfloat))]
       numVertices = (fromIntegral $ length vertices) :: Int32
       vertexSize = (fromIntegral $ sizeOf (head vertices)) :: Int32
 
@@ -167,7 +170,12 @@ genSphere radius verticals horizontals = concat $ do
   let un = 2*pi*(m+1)/verticals
       vn = pi*(n+1)/horizontals
 
-  return $ [point u v, point u vn, point un v, point un vn]
+  let p1 = point u v
+  let p2 = point u vn
+  let p3 = point un v
+  let p4 = point un vn
+
+  return [p1, p3, p2, p4, p2, p3]
     where
       point u v = let x = radius*(cos u)*(sin v)
                       y = radius*(cos v)

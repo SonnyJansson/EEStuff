@@ -1,0 +1,228 @@
+
+==================== FINAL INTERFACE ====================
+2019-10-05 18:44:54.9162452 UTC
+
+interface main:Shaders 8065
+  interface hash: d46a23d368dbcdc1181bc382db92471f
+  ABI hash: a546278af8277aac9028547c60f73ad1
+  export-list hash: 8b7d85d971caa2de80e9f34d780ecaa3
+  orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
+  flag hash: 68f92dae2cdd04460d9c765add3bdd04
+  opt_hash: 6faf2de08de32d19db9870899d88e59a
+  hpc_hash: 93b885adfe0da089cdf634904fd59f71
+  plugin_hash: ad164012d6b1e14942349d58b1132007
+  sig of: Nothing
+  used TH splices: False
+  where
+exports:
+  Shaders.makeProgram
+  Shaders.shaderFromSource
+module dependencies:
+package dependencies: GLURaw-2.0.0.4 GLUT-2.7.0.15
+                      ObjectName-1.1.0.1 OpenGL-3.0.3.0 OpenGLRaw-3.3.3.0 StateVar-1.2
+                      array-0.5.3.0 base-4.12.0.0 binary-0.8.6.0 bytestring-0.10.8.2
+                      containers-0.6.0.1 deepseq-1.4.4.0 fixed-0.3 ghc-boot-th-8.6.5
+                      ghc-prim-0.5.3 half-0.3 integer-gmp-1.0.2.0 pretty-1.1.3.6
+                      stm-2.5.0.0 template-haskell-2.14.0.0 text-1.2.3.1
+orphans: stm-2.5.0.0:Control.Monad.STM text-1.2.3.1:Data.Text
+         binary-0.8.6.0:Data.Binary.Generic text-1.2.3.1:Data.Text.Show
+         bytestring-0.10.8.2:Data.ByteString.Builder base-4.12.0.0:GHC.Float
+         base-4.12.0.0:GHC.Base
+family instance modules: base-4.12.0.0:Control.Applicative
+                         base-4.12.0.0:Data.Complex base-4.12.0.0:Data.Functor.Compose
+                         base-4.12.0.0:Data.Functor.Const
+                         base-4.12.0.0:Data.Functor.Identity
+                         base-4.12.0.0:Data.Functor.Product base-4.12.0.0:Data.Functor.Sum
+                         base-4.12.0.0:Data.Monoid base-4.12.0.0:Data.Semigroup
+                         base-4.12.0.0:Data.Semigroup.Internal base-4.12.0.0:Data.Version
+                         base-4.12.0.0:Data.Void base-4.12.0.0:GHC.Exts
+                         base-4.12.0.0:GHC.Generics base-4.12.0.0:GHC.IO.Exception
+                         containers-0.6.0.1:Data.IntMap.Internal
+                         containers-0.6.0.1:Data.IntSet.Internal
+                         containers-0.6.0.1:Data.Map.Internal
+                         containers-0.6.0.1:Data.Sequence.Internal
+                         containers-0.6.0.1:Data.Set.Internal containers-0.6.0.1:Data.Tree
+                         ghc-boot-th-8.6.5:GHC.ForeignSrcLang.Type
+                         ghc-boot-th-8.6.5:GHC.LanguageExtensions.Type half-0.3:Numeric.Half
+                         pretty-1.1.3.6:Text.PrettyPrint.Annotated.HughesPJ
+                         pretty-1.1.3.6:Text.PrettyPrint.HughesPJ
+                         template-haskell-2.14.0.0:Language.Haskell.TH.Syntax
+                         text-1.2.3.1:Data.Text
+import  -/  GLUT-2.7.0.15:Graphics.UI.GLUT 43d2aa48ac2bb9f84411261eb969127b
+import  -/  OpenGL-3.0.3.0:Graphics.Rendering.OpenGL.GL.Shaders.Program 5f7a728d5f805611b0905e08dfa43b02
+import  -/  OpenGL-3.0.3.0:Graphics.Rendering.OpenGL.GL.Shaders.ProgramObjects 30809b236e5595c86ff26357130d72c9
+import  -/  OpenGL-3.0.3.0:Graphics.Rendering.OpenGL.GL.Shaders.Shader 321bbf29d6c32384935bb48107f953de
+import  -/  OpenGL-3.0.3.0:Graphics.Rendering.OpenGL.GL.Shaders.ShaderObjects 38442050a16e82050c8dc6db01b5a671
+import  -/  StateVar-1.2:Data.StateVar f51da32908a079ec0e60b783cba8db5a
+import  -/  base-4.12.0.0:Data.Foldable bdeac546b12282c8986759606b9295a5
+import  -/  base-4.12.0.0:Data.Traversable a1295a294c330074a1316dd1dc97c6f8
+import  -/  base-4.12.0.0:Data.Tuple 3bf97d65c8e783335a95628f6e4f6f75
+import  -/  base-4.12.0.0:GHC.Base fbe365a916ebeeeb4bc1f895dbe83e42
+import  -/  base-4.12.0.0:Prelude 80c668cb99fbafebd524c5e897f8c982
+import  -/  bytestring-0.10.8.2:Data.ByteString 7817c1b02bd4ea97b333d7c2111974c3
+import  -/  bytestring-0.10.8.2:Data.ByteString.Internal 108149e5194b1fbf6c7e75de98700f21
+import  -/  ghc-prim-0.5.3:GHC.Types 57064c9f957b09bc2e360061ad5cae0b
+6b555eca01c65a6ebfe9751976b99d17
+  $trModule :: GHC.Types.Module
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.Module
+                   Shaders.$trModule3
+                   Shaders.$trModule1) -}
+1c49d27387c69eaa117d9c5ebbf8bb75
+  $trModule1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Shaders.$trModule2) -}
+853c5b1fcecae2e1585eaeb81b1c2c5f
+  $trModule2 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("Shaders"#) -}
+62f7964160980bacaaa70d95b9110b19
+  $trModule3 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS Shaders.$trModule4) -}
+3c69e390a7f07214e00c93ea763800be
+  $trModule4 :: GHC.Prim.Addr#
+  {- HasNoCafRefs, Unfolding: ("main"#) -}
+e07a5a603dc89a95ced8b7db88510b73
+  makeProgram ::
+    [(Graphics.Rendering.OpenGL.GL.Shaders.ShaderObjects.ShaderType,
+      Data.ByteString.Internal.ByteString)]
+    -> GHC.Types.IO
+         Graphics.Rendering.OpenGL.GL.Shaders.Program.Program
+  {- Arity: 2, Strictness: <L,1*U><S,U>,
+     Unfolding: InlineRule (0, True, True)
+                Shaders.makeProgram1
+                  `cast`
+                (<[(Graphics.Rendering.OpenGL.GL.Shaders.ShaderObjects.ShaderType,
+                    Data.ByteString.Internal.ByteString)]>_R
+                 ->_R Sym (GHC.Types.N:IO[0]
+                               <Graphics.Rendering.OpenGL.GL.Shaders.Program.Program>_R)) -}
+d2c7924d5cf27fb9cd77b557ad9ea7e0
+  makeProgram1 ::
+    [(Graphics.Rendering.OpenGL.GL.Shaders.ShaderObjects.ShaderType,
+      Data.ByteString.Internal.ByteString)]
+    -> GHC.Prim.State# GHC.Prim.RealWorld
+    -> (# GHC.Prim.State# GHC.Prim.RealWorld,
+          Graphics.Rendering.OpenGL.GL.Shaders.Program.Program #)
+  {- Arity: 2, Strictness: <L,1*U><S,U>,
+     Unfolding: (\ (shadersInfo :: [(Graphics.Rendering.OpenGL.GL.Shaders.ShaderObjects.ShaderType,
+                                     Data.ByteString.Internal.ByteString)])
+                   (s :: GHC.Prim.State# GHC.Prim.RealWorld) ->
+                 case Graphics.GL.Functions.F05.ptr_glCreateProgram of ds1 { GHC.Ptr.FunPtr ds2 ->
+                 case {__dyn_ccall_GC "" GHC.Prim.Addr#
+                                         -> GHC.Prim.State# GHC.Prim.RealWorld
+                                         -> (# GHC.Prim.State# GHC.Prim.RealWorld,
+                                               GHC.Prim.Word# #)}
+                        ds2
+                        s of wild { (#,#) ds4 ds5 ->
+                 case Shaders.makeProgram2
+                        shadersInfo
+                        ds4 of ds7 { (#,#) ipv ipv1 ->
+                 let {
+                   ipv2 :: GHC.Prim.Word# = GHC.Prim.narrow32Word# ds5
+                 } in
+                 let {
+                   exit :: GHC.Prim.State# GHC.Prim.RealWorld
+                           -> (# GHC.Prim.State# GHC.Prim.RealWorld,
+                                 Graphics.Rendering.OpenGL.GL.Shaders.Program.Program #)
+                     <join 1> {- Arity: 1, Strictness: <S,U> -}
+                   = \ (eta :: GHC.Prim.State# GHC.Prim.RealWorld)[OneShot] ->
+                     case Graphics.GL.Functions.F15.ptr_glLinkProgram of ds8 { GHC.Ptr.FunPtr ds3 ->
+                     case {__dyn_ccall_GC "" GHC.Prim.Addr#
+                                             -> GHC.Prim.Word#
+                                             -> GHC.Prim.State# GHC.Prim.RealWorld
+                                             -> (# GHC.Prim.State# GHC.Prim.RealWorld #)}
+                            ds3
+                            ipv2
+                            eta of wild1 { Unit# ds9 ->
+                     (# ds9,
+                        (GHC.Word.W32# ipv2)
+                          `cast`
+                        (Sym (Graphics.Rendering.OpenGL.GL.Shaders.Program.N:Program[0])) #) } }
+                 } in
+                 letrec {
+                   go :: [Graphics.Rendering.OpenGL.GL.Shaders.Shader.Shader]
+                         -> GHC.Prim.State# GHC.Prim.RealWorld
+                         -> (# GHC.Prim.State# GHC.Prim.RealWorld,
+                               Graphics.Rendering.OpenGL.GL.Shaders.Program.Program #)
+                     <join 2> {- Arity: 2, Strictness: <S,1*U><S,U> -}
+                   = \ (ds :: [Graphics.Rendering.OpenGL.GL.Shaders.Shader.Shader])
+                       (eta :: GHC.Prim.State# GHC.Prim.RealWorld) ->
+                     case ds of wild1 {
+                       [] -> exit eta
+                       : y ys
+                       -> case Graphics.GL.Functions.F01.ptr_glAttachShader of ds3 { GHC.Ptr.FunPtr ds8 ->
+                          case y `cast`
+                               (Graphics.Rendering.OpenGL.GL.Shaders.Shader.N:Shader[0]) of ds9 { GHC.Word.W32# ds10 ->
+                          case {__dyn_ccall_GC "" GHC.Prim.Addr#
+                                                  -> GHC.Prim.Word#
+                                                  -> GHC.Prim.Word#
+                                                  -> GHC.Prim.State# GHC.Prim.RealWorld
+                                                  -> (# GHC.Prim.State# GHC.Prim.RealWorld #)}
+                                 ds8
+                                 ipv2
+                                 ds10
+                                 eta of wild2 { Unit# ds11 ->
+                          go ys ds11 } } } }
+                 } in
+                 go ipv1 ipv } } }) -}
+f3276fe4087efc9910d0d8a27e1d4315
+  makeProgram2 ::
+    [(Graphics.Rendering.OpenGL.GL.Shaders.ShaderObjects.ShaderType,
+      Data.ByteString.Internal.ByteString)]
+    -> GHC.Prim.State# GHC.Prim.RealWorld
+    -> (# GHC.Prim.State# GHC.Prim.RealWorld,
+          [Graphics.Rendering.OpenGL.GL.Shaders.Shader.Shader] #)
+  {- Arity: 2, Strictness: <S,1*U><S,U> -}
+ce943637fce6bc971c7e59b06977696b
+  shaderFromSource ::
+    Graphics.Rendering.OpenGL.GL.Shaders.ShaderObjects.ShaderType
+    -> Data.ByteString.Internal.ByteString
+    -> GHC.Types.IO Graphics.Rendering.OpenGL.GL.Shaders.Shader.Shader
+  {- Arity: 3, Strictness: <S,1*U><L,U><S,U>,
+     Unfolding: InlineRule (0, True, True)
+                Shaders.shaderFromSource1
+                  `cast`
+                (<Graphics.Rendering.OpenGL.GL.Shaders.ShaderObjects.ShaderType>_R
+                 ->_R <Data.ByteString.Internal.ByteString>_R
+                 ->_R Sym (GHC.Types.N:IO[0]
+                               <Graphics.Rendering.OpenGL.GL.Shaders.Shader.Shader>_R)) -}
+603e46e6dc0bad2aa0475efef6d81e71
+  shaderFromSource1 ::
+    Graphics.Rendering.OpenGL.GL.Shaders.ShaderObjects.ShaderType
+    -> Data.ByteString.Internal.ByteString
+    -> GHC.Prim.State# GHC.Prim.RealWorld
+    -> (# GHC.Prim.State# GHC.Prim.RealWorld,
+          Graphics.Rendering.OpenGL.GL.Shaders.Shader.Shader #)
+  {- Arity: 3, Strictness: <S,1*U><L,U><S,U>,
+     Unfolding: (\ (shaderType :: Graphics.Rendering.OpenGL.GL.Shaders.ShaderObjects.ShaderType)
+                   (path :: Data.ByteString.Internal.ByteString)
+                   (s :: GHC.Prim.State# GHC.Prim.RealWorld) ->
+                 case Graphics.Rendering.OpenGL.GL.Shaders.ShaderObjects.createShader1
+                        shaderType
+                        s of ds1 { (#,#) ipv ipv1 ->
+                 case Graphics.Rendering.OpenGL.GL.Shaders.ShaderObjects.$wshaderSourceBS
+                        ipv1 of ww { (#,#) ww1 ww2 ->
+                 case (ww2 path) `cast` (GHC.Types.N:IO[0] <()>_R)
+                        ipv of ds2 { (#,#) ipv2 ipv3 ->
+                 case Graphics.GL.Functions.F04.ptr_glCompileShader of ds3 { GHC.Ptr.FunPtr ds4 ->
+                 case ipv1
+                        `cast`
+                      (Graphics.Rendering.OpenGL.GL.Shaders.Shader.N:Shader[0]) of ds5 { GHC.Word.W32# ds6 ->
+                 case {__dyn_ccall_GC "" GHC.Prim.Addr#
+                                         -> GHC.Prim.Word#
+                                         -> GHC.Prim.State# GHC.Prim.RealWorld
+                                         -> (# GHC.Prim.State# GHC.Prim.RealWorld #)}
+                        ds4
+                        ds6
+                        ipv2 of wild { Unit# ds7 ->
+                 (# ds7,
+                    ds5
+                      `cast`
+                    (Sym (Graphics.Rendering.OpenGL.GL.Shaders.Shader.N:Shader[0])) #) } } } } } }) -}
+trusted: none
+require own pkg trusted: False
+module header:
+  Nothing
+declaration docs:
+arg docs:
+

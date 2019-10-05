@@ -1,0 +1,6 @@
+Configuring fixed-0.3...
+Preprocessing library for fixed-0.3..
+Building library for fixed-0.3..
+[1 of 1] Compiling Numeric.Fixed    ( src\Numeric\Fixed.hs, .stack-work\dist\e626a42b\build\Numeric\Fixed.o )
+Installing library in C:\sr\snapshots\288dd981\lib\x86_64-windows-ghc-8.6.5\fixed-0.3-DiINgdv3jW2LmDO7zcODC4
+Registering library for fixed-0.3..

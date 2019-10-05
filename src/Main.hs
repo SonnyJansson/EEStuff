@@ -3,11 +3,13 @@
 module Main where
 
 import qualified Data.ByteString as BS
+import Data.Int
 import Data.IORef
 import Graphics.UI.GLUT as GLUT hiding (normalize, cross)
 
 import Foreign.Marshal.Array
 import Foreign.Ptr
+import Foreign.Storable
 
 import Shaders
 
@@ -44,7 +46,7 @@ main = do
 
  -- Programs 
 
-  putStrLn $ show $ sphere 0.5 5 5
+  putStrLn $ show $ genSphere 0.5 5 5
 
   sphereProgram <- makeProgram [ (VertexShader, "shaders/sphere.vert")
                                , (FragmentShader, "shaders/sphere.frac") ]
@@ -83,11 +85,9 @@ display displayData = do
   -- loadIdentity
   -- lookAt (camPos camera) (camLook camera) (camUp camera)
 
-  currentProgram $= (Just $ sphereProgram displayData)
-
-  complexGrid
-  gridAxis
-  riemannSphere
+  -- complexGrid
+  -- gridAxis
+  riemannSphere displayData
 
   flush
   putStrLn "Drawn!"
@@ -122,16 +122,34 @@ complexGrid = do
 --   renderObject Solid $ GLUT.Sphere' 0.25 50 50
 
 
-riemannSphere :: IO ()
-riemannSphere = do
+riemannSphere :: DisplayData -> IO ()
+riemannSphere displayData = do
   sphere <- genObjectName
-  bindVertexArrayObject $ Just sphere
+  bindVertexArrayObject $= Just sphere
 
-  let vertices = sphere 0.25 5 5
+  let vertices = genSphere 0.25 5 5
+      numVertices = (fromIntegral $ length vertices) :: Int32
+      vertexSize = (fromIntegral $ sizeOf (head vertices)) :: Int32
+
+  arrayBuffer <- genObjectName
+  bindBuffer ArrayBuffer $= Just arrayBuffer
+  withArray vertices $ \ptr -> do
+    let size = fromIntegral (numVertices * vertexSize)
+    bufferData ArrayBuffer $= (size, ptr, StaticDraw)
+
+  currentProgram $= (Just $ sphereProgram displayData)
+
+  let firstIndex = (fromIntegral 0) :: Int32
+      vPosition = AttribLocation 0
+
+  vertexAttribPointer vPosition $= (ToFloat,
+    VertexArrayDescriptor 3 Float (fromIntegral vertexSize) (bufferOffset (firstIndex * vertexSize)))
+
+  drawArrays Triangles firstIndex numVertices
 
 
-sphere :: Float -> Float -> Float -> [Vertex3 GLfloat]
-sphere radius verticals horizontals = concat $ do
+genSphere :: Float -> Float -> Float -> [Vertex3 GLfloat]
+genSphere radius verticals horizontals = concat $ do
   -- u <- [2*pi*x/verticals | x <- [0..verticals]]
   -- v <- [pi*x/horizontals | x <- [0..horizontals]]
 
@@ -165,3 +183,6 @@ subVertex (Vertex3 x1 y1 z1) (Vertex3 x2 y2 z2) = Vector3 (x1-x2) (y1-y2) (z1-z2
 
 cross :: Num a => Vector3 a -> Vector3 a -> Vector3 a
 cross (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) = Vector3 (y1*z2 - z1*y2) (z1*x2 - x1*z2) (x1*y2-y1*x2)
+
+bufferOffset :: Integral a => a -> Ptr b
+bufferOffset = plusPtr nullPtr . fromIntegral

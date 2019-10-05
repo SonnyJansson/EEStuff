@@ -1,0 +1,6 @@
+Configuring ObjectName-1.1.0.1...
+Preprocessing library for ObjectName-1.1.0.1..
+Building library for ObjectName-1.1.0.1..
+[1 of 1] Compiling Data.ObjectName  ( src\Data\ObjectName.hs, .stack-work\dist\e626a42b\build\Data\ObjectName.o )
+Installing library in C:\sr\snapshots\288dd981\lib\x86_64-windows-ghc-8.6.5\ObjectName-1.1.0.1-CDTV8Pj4rLtHGU6QO0tv1T
+Registering library for ObjectName-1.1.0.1..

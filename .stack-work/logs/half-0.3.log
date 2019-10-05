@@ -1,0 +1,6 @@
+Configuring half-0.3...
+Preprocessing library for half-0.3..
+Building library for half-0.3..
+[1 of 1] Compiling Numeric.Half     ( src\Numeric\Half.hs, .stack-work\dist\e626a42b\build\Numeric\Half.o )
+Installing library in C:\sr\snapshots\288dd981\lib\x86_64-windows-ghc-8.6.5\half-0.3-Ev8Lz3j60xACodwSKk6ogk
+Registering library for half-0.3..

@@ -47,19 +47,25 @@ main = do
 
 --  putStrLn $ show $ genSphere 0.5 5 5
 
-  sphereProgram <- makeProgram [ (VertexShader, "shaders/sphere.vert")
-                               , (FragmentShader, "shaders/sphere.frag") ]
+  -- sphereProgram <- makeProgram [ (VertexShader, "shaders/sphere.vert")
+  --                              , (FragmentShader, "shaders/sphere.frag") ]
 
   -- planeProgram <- makeProgram [ (VertexShader, "shaders/plane.vert")
   --                             , (FragmentShader, "shaders/plane.frac") ]
 
   -- sphereProgram <- loadShaders [
   --    ShaderInfo VertexShader (FileSource "shaders/sphere.vert"),
-  --    ShaderInfo FragmentShader (FileSource "shaders/sphere.frac")]
+ --     ShaderInfo FragmentShader (FileSource "shaders/sphere.frac")]
+
+  sphereProgram <- loadShaders [
+      ShaderInfo VertexShader (FileSource "shaders/sphere.vert"),
+      ShaderInfo FragmentShader (FileSource "shaders/sphere.frac")] 
 
   let displayData = DisplayData { camera = camIO, sphereProgram = sphereProgram }
 
   window <- createWindow "Hello, World"
+  initialContextVersion $= (4,3)
+  initialDisplayMode $= [ RGBAMode ]
   reshapeCallback $= Just reshape
   displayCallback $= display displayData
   --lookAt (camPos camera) (camLook camera) (camUp camera)
@@ -89,7 +95,7 @@ display displayData = do
   -- gridAxis
   riemannSphere displayData
 
-  -- flush
+  flush
   putStrLn "Drawn!"
 
 gridAxis :: IO ()
@@ -150,8 +156,6 @@ riemannSphere displayData = do
   currentProgram $= (Just $ sphereProgram displayData)
 
   drawArrays Triangles firstIndex numVertices
-
-  flush
 
   putStrLn "Should have been drawn now"
 

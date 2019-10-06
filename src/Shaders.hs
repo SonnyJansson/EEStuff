@@ -83,11 +83,8 @@ loadCompileAttach _ [] = return ()
 loadCompileAttach program (ShaderInfo shType source : infos) =
    createShader shType `bracketOnError` deleteObjectName $ \shader -> do
       src <- getSource source
-      putStrLn "Compiling shader..."
       shaderSourceBS shader $= src
-      B.putStrLn src
       compileAndCheck shader
-      putStrLn "Compilation succeeded"
       attachShader program shader
       loadCompileAttach program infos
 

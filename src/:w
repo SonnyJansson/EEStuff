@@ -1,0 +1,182 @@
+{-# LANGUAGE OverloadedStrings #-}
+
+module Main where
+
+import qualified Data.ByteString as BS
+import Data.Int
+import Data.IORef
+import Graphics.UI.GLUT as GLUT hiding (normalize, cross)
+
+import Foreign.Marshal.Array
+import Foreign.Ptr
+import Foreign.Storable
+
+import Shaders
+import Utils
+
+data Camera = Camera { camPos  :: Vertex3 GLdouble
+                     , camLook :: Vertex3 GLdouble
+                     , camUp   :: Vector3 GLdouble
+                     }
+
+data ScreenObject = ScreenObject VertexArrayObject ArrayIndex NumArrayIndices
+
+data DisplayData = DisplayData { camera        :: IORef Camera
+                               , sphereProgram :: Program
+                               , planeProgram  :: Program
+                               , sphere        :: ScreenObject
+                               }
+
+main :: IO ()
+main = do
+  (progName, _args) <- getArgsAndInitialize
+  initialDisplayMode $= [ RGBAMode ]
+  initialWindowSize $= Size 512 512
+  initialContextVersion $= (4, 3)
+  initialContextFlags $= [ DebugContext ]
+  initialContextProfile $= [ CoreProfile ]
+  window <- createWindow "Hello, World"
+
+  displayData <- initialise
+  
+  reshapeCallback $= Just reshape
+  displayCallback $= display displayData
+  --lookAt (camPos camera) (camLook camera) (camUp camera)
+  mainLoop
+
+reshape :: ReshapeCallback
+reshape size = do
+--  lookAt (Vertex3 0 0 (-1)) (Vertex3 0 0 0) (Vector3 0 1 0)
+  viewport $= (Position 0 0, size)
+  --loadIdentity
+  postRedisplay Nothing
+
+display :: DisplayData -> DisplayCallback
+display displayData = do
+  clearColor $= Color4 1 1 1 1
+  clear [ ColorBuffer ]
+  let camIO = camera displayData
+
+  camera <- get camIO
+
+  loadIdentity
+  lookAt (camPos camera) (camLook camera) (camUp camera)
+
+  complexGrid
+  gridAxis
+  riemannSphere displayData
+
+  flush
+  putStrLn "Drawn!"
+
+gridAxis :: IO ()
+gridAxis = do
+  color3f 0 1 0
+  lineWidth $= 3
+  renderPrimitive Lines $ mapM_ vertex3f
+    [ ((-1), 0, 0), (1, 0, 0)
+    , (0, (-1), 0), (0, 1, 0)
+    , (0, 0, (-1)), (0, 0, 1) :: (GLfloat, GLfloat, GLfloat) ]
+  lineWidth $= 1
+
+gridLines :: GLfloat
+gridLines = 8
+
+complexGrid :: IO ()
+complexGrid = do
+  color3f 0 0 0 
+  -- Lines parallel to x-axis
+  renderPrimitive Lines $ mapM_ vertex3f $ concat $ fmap pointToLines [(x,x) | x <- (fmap (*(2/gridLines)) [(-gridLines/2)..(gridLines/2)])]
+  where
+    pointToLines (x,y) = [(x, 0 :: GLfloat, (-1)), (x, 0, 1), ((-1), 0, y), (1, 0, y)]
+
+-- riemannSphere :: IO ()
+-- riemannSphere = do
+--   vertexAttribCoord3 $= (Just $ AttribLocation 0)
+--   -- textureFunction $= Blend
+--   -- color4f 0 0 0 0.01
+--   renderObject Solid $ GLUT.Sphere' 0.25 50 50
+
+
+riemannSphere :: DisplayData -> IO ()
+riemannSphere displayData = do
+  let (ScreenObject s a n) = sphere displayData
+  
+  bindVertexArrayObject $= Just s
+
+  currentProgram $= (Just $ sphereProgram displayData)
+
+  drawArrays Triangles a n
+
+initialise :: IO DisplayData
+initialise =  do
+  -- Camera
+
+  let cameraPos = (Vertex3 0.5 0.35 ((-0.5) :: GLdouble))
+  let cameraLook = (Vertex3 0 0 (0 :: GLdouble))
+
+  let camDirection = normalize (cameraLook `subVertex` cameraPos)
+  let worldUp = (Vector3 0 1 (0 :: GLdouble))
+  let cameraRight = normalize $ cross worldUp camDirection
+  let cameraAngle = pi/2
+  let cameraUp = cross camDirection cameraRight
+
+  putStrLn $ show cameraUp
+
+  --let camUp = (Vector3 0 1 (0 :: GLdouble))
+  camIO <- newIORef $ Camera {camPos = cameraPos, camLook = cameraLook, camUp = cameraUp}
+  camera <- get camIO
+
+  -- Loading programs
+
+  sphereProgram <- loadShaders [
+      ShaderInfo VertexShader (FileSource "shaders/sphere.vert"),
+      ShaderInfo FragmentShader (FileSource "shaders/sphere.frag")] 
+
+  planeProgram <- loadShaders [
+      ShaderInfo VertexShader (FileSource "shaders/plane.vert"),
+      ShaderInfo FragmentShader (FileSource "shaders/plane.frag")] 
+
+  -- Sphere object
+
+  sphereObject <- initialiseSphere
+
+  let displayData = DisplayData { camera = camIO, sphereProgram = sphereProgram, planeProgram = planeProgram, sphere = sphereObject }
+
+  return displayData
+
+
+-- Sphere object initialisation
+initialiseSphere :: IO ScreenObject
+initialiseSphere = do
+  sphere <- genObjectName
+  bindVertexArrayObject $= Just sphere
+
+  let vertices = genSphere 0.25 50 50
+  --let vertices = [(Vertex3 (-1) 0 0), (Vertex3 0 1 0), (Vertex3 1 0 (0 :: GLfloat))]
+      numVertices = div (fromIntegral $ length vertices) 3 :: Int32
+      vertexSize = 3*(fromIntegral $ sizeOf (head vertices)) :: Int32
+
+  putStrLn $ show numVertices ++ ", " ++ show vertexSize
+
+  arrayBuffer <- genObjectName
+  bindBuffer ArrayBuffer $= Just arrayBuffer
+  withArray vertices $ \ptr -> do
+    let size = fromIntegral (numVertices * vertexSize)
+    bufferData ArrayBuffer $= (size, ptr, StaticDraw)
+
+  let floatSize = (fromIntegral $ sizeOf (0.0 :: GLfloat))
+      stride = 5*(sizeof)
+
+  let firstIndex = 0 :: Int32
+      vPosition = AttribLocation 0
+
+  vertexAttribPointer vPosition $= (ToFloat,
+    VertexArrayDescriptor 3 Float (fromIntegral vertexSize) (bufferOffset (firstIndex * vertexSize)))
+  vertexAttribArray vPosition $= Enabled
+
+  --bindVertexArrayObject $= Just sphere
+  bindVertexArrayObject $= Nothing
+
+  return $ ScreenObject sphere firstIndex numVertices
+
